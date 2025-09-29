@@ -137,3 +137,7 @@ The most efficient approach uses a **hash table** to group anagrams by their sor
 ## Problem Link
 
 [49. Group Anagrams - LeetCode](https://leetcode.com/problems/group-anagrams/)
+
+## Additional Resources
+
+- [NeetCode Solution - Group Anagrams](https://neetcode.io/solutions/group-anagrams)

@@ -123,3 +123,7 @@ The most efficient approach uses **two pointers** to compare characters from bot
 ## Problem Link
 
 [125. Valid Palindrome - LeetCode](https://leetcode.com/problems/valid-palindrome/)
+
+## Additional Resources
+
+- [NeetCode Solution - Valid Palindrome](http://neetcode.io/solutions/valid-palindrome)
