@@ -63,3 +63,6 @@ coverage/
 # Documentation build
 docs/_build/
 site/
+
+# Staging area - learning roadmaps (temporary)
+_staging/_learning_roadmaps/
