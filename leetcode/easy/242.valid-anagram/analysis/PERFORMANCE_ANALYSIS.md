@@ -6,9 +6,11 @@
 - Sorting: O(n log n) time, larger constants
 
 ## Go vs Java (indicative)
-- Go counting array: ~0.3–0.6 ms for 100k chars
-- Java counting array: ~0.8–1.2 ms for 100k chars
-- Sorting increases by ~5–20x depending on input size and locale
+- Go (bench on this machine):
+  - ASCII counting: ~11.2 µs/op for 7k chars (per op), 0 allocs/op
+  - Unicode map: ~193.9 µs/op, allocations expected (maps)
+- Java micro-benchmark (local): `count: 33 ms, sort: 75 ms` for repeated workloads (1k counts, 200 sorts on ~7k chars)
+- Sorting generally slower than counting; Unicode map slower due to hashing/allocations
 
 ## Benchmarks (Go, illustrative)
 ```go
