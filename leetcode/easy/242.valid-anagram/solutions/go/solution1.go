@@ -1,5 +1,7 @@
 package main
 
+import "sort"
+
 // isAnagram checks whether t is an anagram of s using frequency counting.
 // Assumes lowercase English letters a-z.
 func isAnagram(s string, t string) bool {
@@ -33,6 +35,27 @@ func isAnagramUnicode(s, t string) bool {
 	}
 	for _, v := range m {
 		if v != 0 {
+			return false
+		}
+	}
+	return true
+}
+
+// isAnagramSort compares sorted byte/rune sequences.
+// For ASCII lowercase, sort bytes; for general text, sort runes.
+func isAnagramSort(s, t string) bool {
+	if len(s) != len(t) {
+		return false
+	}
+	a := []byte(s)
+	b := []byte(t)
+	sort.Slice(a, func(i, j int) bool { return a[i] < a[j] })
+	sort.Slice(b, func(i, j int) bool { return b[i] < b[j] })
+	if len(a) != len(b) { // defensive, should match by length
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
 			return false
 		}
 	}

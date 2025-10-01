@@ -12,6 +12,12 @@ func TestIsAnagram_Basic(t *testing.T) {
 	if isAnagram("rat", "car") {
 		t.Fatalf("expected false")
 	}
+	if !isAnagramSort("anagram", "nagaram") {
+		t.Fatalf("expected true (sort)")
+	}
+	if isAnagramSort("rat", "car") {
+		t.Fatalf("expected false (sort)")
+	}
 }
 
 func TestIsAnagram_Unicode(t *testing.T) {
