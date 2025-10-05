@@ -6,6 +6,7 @@ A curated, structured personal "study bible" for algorithms, data structures, co
 ```
 ├── leetcode/                  # LeetCode solutions with analyses and tests
 │   ├── easy/
+│   │   ├── 20.valid-parentheses/
 │   │   ├── 1071.gcd-of-strings/
 │   │   ├── 125.valid-palindrome/
 │   │   ├── 1768.merge-strings-alternately/
@@ -32,7 +33,7 @@ A curated, structured personal "study bible" for algorithms, data structures, co
 
 ## ✅ Highlights
 - **LeetCode**: Easy and Medium problems with full analysis and multi-language solutions
-  - Easy: 1071, 125, 1768, 242
+  - Easy: 20, 1071, 125, 1768, 242
   - Medium: 49 (Group Anagrams)
 - **HackerRank**: Warmup problem Plus Minus with Java and Go solutions
 - **Projects**:
