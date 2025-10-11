@@ -10,6 +10,12 @@ A practical guide to algorithms and data structures with clear explanations and 
 - **Exercises**: Recursive sum, count, max functions
 - **Key Concepts**: Base cases, recursive cases, binary search analysis
 
+### Chapter 5: Hash Tables
+- **File**: `chapter-5-hash-tables.md`
+- **Topics**: Hash tables, hash functions, collision resolution
+- **Exercises**: Hash function consistency analysis
+- **Key Concepts**: Hash function properties, chaining, open addressing
+
 ## Book Structure
 
 This book covers fundamental algorithms and data structures with a focus on:
@@ -26,18 +32,27 @@ This book covers fundamental algorithms and data structures with a focus on:
 - **Quicksort**: Efficient sorting algorithm using divide & conquer
 - **Base Cases**: Smallest solvable subproblems that stop recursion
 
+### Chapter 5 Highlights
+- **Hash Tables**: Fast O(1) average time complexity for lookups
+- **Hash Functions**: Must be consistent, fast, and distribute keys evenly
+- **Collision Resolution**: Chaining and open addressing strategies
+- **Consistency**: Hash functions must return same output for same input
+
 ### Key Takeaways
 1. Every recursive function needs a base case to prevent infinite loops
 2. Divide & conquer algorithms often have O(log n) or O(n log n) complexity
 3. Understanding base cases is crucial for designing recursive solutions
 4. Binary search is a classic divide & conquer algorithm
+5. Hash tables provide O(1) average time complexity for fast lookups
+6. Hash function consistency is essential for reliable hash table behavior
+7. Collision resolution strategies balance performance and memory usage
 
 ## Future Chapters to Add
 
 - Chapter 1: Introduction to Algorithms
 - Chapter 2: Selection Sort
 - Chapter 3: Recursion
-- Chapter 5: Hash Tables
+- ~~Chapter 5: Hash Tables~~ ✅ **COMPLETED**
 - Chapter 6: Breadth-First Search
 - Chapter 7: Dijkstra's Algorithm
 - Chapter 8: Greedy Algorithms

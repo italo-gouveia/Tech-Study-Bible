@@ -401,6 +401,7 @@ def merge(left, right):
 - **Selection Sort**: Simple to understand, but avoid for large datasets
 - **Traveling Salesman**: Use approximation algorithms for real-world problems
 
+
 ### Performance Considerations
 
 - **Time complexity**: Often O(n) for simple recursion, O(log n) for divide-and-conquer
