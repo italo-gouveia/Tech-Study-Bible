@@ -154,6 +154,19 @@ for s in test_strings:
 
 #### Basic Hash Table with Chaining
 
+**📁 Java Implementation:**
+- **Complete Implementation**: [`projects/data-structures/java/datastructures-java/src/hashtables/MyHashTable.java`](../projects/data-structures/java/datastructures-java/src/hashtables/MyHashTable.java)
+- **Usage Examples**: [`projects/data-structures/java/datastructures-java/src/hashtables/Main.java`](../projects/data-structures/java/datastructures-java/src/hashtables/Main.java)
+- **Documentation**: [`projects/data-structures/java/datastructures-java/src/hashtables/README.md`](../projects/data-structures/java/datastructures-java/src/hashtables/README.md)
+
+**Key Features of the Java Implementation:**
+- Generic types `<K, V>` for type safety
+- Chaining collision resolution using `LinkedList<Entry<K, V>>[]`
+- Hash function: `Math.abs(key.hashCode()) % table.length`
+- Complete API: `put()`, `get()`, `remove()`, `size()`, `isEmpty()`
+- Initial capacity of 16 buckets with automatic expansion
+
+**Python Implementation (for comparison):**
 ```python
 class HashTable:
     def __init__(self, size=10):
@@ -193,18 +206,6 @@ class HashTable:
                 return v
         
         return None  # Key not found
-    
-    def delete(self, key):
-        """Delete key-value pair"""
-        index = self._hash(key)
-        bucket = self.table[index]
-        
-        for i, (k, v) in enumerate(bucket):
-            if k == key:
-                del bucket[i]
-                return True
-        
-        return False  # Key not found
 
 # Example usage
 phone_book = HashTable()
@@ -301,6 +302,87 @@ Optimal: 0.5 to 0.75
 - DNS resolution caching
 - CPU cache mapping
 
+##### Cache Implementation with Hash Tables
+
+**📁 Java LRU Cache Implementation:**
+- **Complete Implementation**: [`projects/data-structures/java/datastructures-java/src/hashtables/lrucache/LRUCache.java`](../projects/data-structures/java/datastructures-java/src/hashtables/lrucache/LRUCache.java)
+- **Usage Examples**: [`projects/data-structures/java/datastructures-java/src/hashtables/lrucache/Main.java`](../projects/data-structures/java/datastructures-java/src/hashtables/lrucache/Main.java)
+- **Documentation**: [`projects/data-structures/java/datastructures-java/src/hashtables/lrucache/README.md`](../projects/data-structures/java/datastructures-java/src/hashtables/lrucache/README.md)
+
+**Key Features of the Java LRU Cache:**
+- Generic types `<K, V>` for type safety
+- HashMap + Doubly Linked List for O(1) operations
+- Automatic eviction of least recently used items
+- Comprehensive API with edge case handling
+- Thread-safe design ready for concurrent access
+
+**Python Implementation (for comparison):**
+```python
+class LRUCache:
+    """Least Recently Used Cache implementation using hash table + doubly linked list"""
+    
+    class Node:
+        def __init__(self, key=0, value=0):
+            self.key = key
+            self.value = value
+            self.prev = None
+            self.next = None
+    
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.cache = {}  # Hash table: key -> Node
+        self.head = self.Node()
+        self.tail = self.Node()
+        self.head.next = self.tail
+        self.tail.prev = self.head
+    
+    def get(self, key):
+        """Get value and mark as recently used"""
+        node = self.cache.get(key)
+        if not node:
+            return -1
+        
+        # Move to head (mark as recently used)
+        self._move_to_head(node)
+        return node.value
+    
+    def put(self, key, value):
+        """Put key-value pair, evict LRU if necessary"""
+        node = self.cache.get(key)
+        
+        if not node:
+            new_node = self.Node(key, value)
+            
+            if len(self.cache) >= self.capacity:
+                # Remove LRU item
+                tail = self._pop_tail()
+                del self.cache[tail.key]
+            
+            # Add new node
+            self.cache[key] = new_node
+            self._add_node(new_node)
+        else:
+            # Update existing node
+            node.value = value
+            self._move_to_head(node)
+
+# Example usage
+cache = LRUCache(3)
+cache.put(1, "value1")
+cache.put(2, "value2")
+cache.put(3, "value3")
+print(cache.get(2))    # "value2"
+cache.put(4, "value4") # Evicts key 1 (LRU)
+print(cache.get(1))    # -1 (not found)
+print(cache.get(4))    # "value4"
+```
+
+##### Cache Performance Analysis
+- **Time Complexity**: O(1) for both get and put operations
+- **Space Complexity**: O(capacity) for hash table + linked list
+- **Cache Hit**: When requested data is in cache (fast access)
+- **Cache Miss**: When requested data is not in cache (slower access)
+
 #### 3. Language Features
 - Python dictionaries
 - Java HashMap
@@ -396,3 +478,115 @@ print(two_sum(nums, target))  # Output: [0, 1]
 - **Deduplication**: Remove duplicate elements
 - **Set operations**: Union, intersection, difference
 - **Memoization**: Cache function results
+
+### Cache Types and Strategies
+
+#### 1. LRU (Least Recently Used) Cache
+- Evicts least recently accessed items
+- Uses hash table + doubly linked list
+- O(1) time complexity for all operations
+- Good for temporal locality patterns
+
+#### 2. LFU (Least Frequently Used) Cache
+- Evicts least frequently accessed items
+- Uses hash table + frequency tracking
+- Good for items with varying access patterns
+
+#### 3. FIFO (First In, First Out) Cache
+- Evicts oldest items first
+- Uses hash table + queue
+- Simple implementation
+
+#### 4. TTL (Time To Live) Cache
+- Items expire after specified time
+- Uses hash table + timestamp tracking
+- Good for data with known expiration
+
+**📁 Java TTL Cache Implementation:**
+- **Complete Implementation**: [`projects/data-structures/java/datastructures-java/src/hashtables/lrucache/ttlcache/TTLCache.java`](../projects/data-structures/java/datastructures-java/src/hashtables/lrucache/ttlcache/TTLCache.java)
+- **Usage Examples**: [`projects/data-structures/java/datastructures-java/src/hashtables/lrucache/ttlcache/Main.java`](../projects/data-structures/java/datastructures-java/src/hashtables/lrucache/ttlcache/Main.java)
+- **Documentation**: [`projects/data-structures/java/datastructures-java/src/hashtables/lrucache/ttlcache/README.md`](../projects/data-structures/java/datastructures-java/src/hashtables/lrucache/ttlcache/README.md)
+
+**Key Features of the Java TTL Cache:**
+- Thread-safe implementation using ConcurrentHashMap
+- Flexible TTL: global default or custom per item
+- Background cleanup with ScheduledExecutorService
+- TTL management: extend, check remaining time
+- Performance monitoring and statistics
+- Automatic expiration with lazy cleanup
+
+**Python Implementation (for comparison):**
+```python
+# Simple TTL Cache Implementation
+import time
+
+class TTLCache:
+    def __init__(self, ttl_seconds=300):  # 5 minutes default
+        self.cache = {}
+        self.ttl = ttl_seconds
+    
+    def get(self, key):
+        if key in self.cache:
+            value, timestamp = self.cache[key]
+            if time.time() - timestamp < self.ttl:
+                return value
+            else:
+                # Expired
+                del self.cache[key]
+        return None
+    
+    def put(self, key, value):
+        self.cache[key] = (value, time.time())
+    
+    def is_valid(self, key):
+        if key in self.cache:
+            _, timestamp = self.cache[key]
+            return time.time() - timestamp < self.ttl
+        return False
+
+# Example usage
+ttl_cache = TTLCache(ttl_seconds=60)  # 1 minute TTL
+ttl_cache.put("user:123", {"name": "Alice", "email": "alice@example.com"})
+print(ttl_cache.get("user:123"))  # Returns user data
+time.sleep(61)  # Wait for expiration
+print(ttl_cache.get("user:123"))  # Returns None (expired)
+```
+
+### Cache Performance Metrics
+
+#### Hit Rate vs Miss Rate
+- **Hit Rate**: Percentage of requests served from cache
+- **Miss Rate**: Percentage of requests that miss cache
+- **Optimal Hit Rate**: 80-95% depending on use case
+
+#### Cache Efficiency
+```
+Cache Efficiency = (Cache Hits / Total Requests) × 100%
+```
+
+#### Memory Usage
+- **Cache Size**: Total memory used by cache
+- **Memory Overhead**: Additional memory for cache structure
+- **Eviction Policy**: How to free memory when cache is full
+
+### Real-World Cache Examples
+
+#### 1. Web Browser Cache
+- Stores web pages, images, CSS, JavaScript
+- Uses LRU strategy for page cache
+- TTL for different resource types
+
+#### 2. Database Query Cache
+- Caches frequently executed queries
+- Reduces database load
+- Uses query hash as key
+
+#### 3. CPU Cache
+- L1, L2, L3 caches in processors
+- Uses hardware-based hash functions
+- Critical for performance
+
+#### 4. CDN (Content Delivery Network)
+- Caches content closer to users
+- Reduces latency
+- Uses geographic distribution
