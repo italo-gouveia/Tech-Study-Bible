@@ -152,6 +152,19 @@ for s in test_strings:
 
 ### Hash Table Implementation
 
+#### What Makes a Good Hash Function?
+- **Deterministic and consistent**: same input → same output, always
+- **Uniform distribution**: spreads keys evenly across buckets to minimize collisions (avoids clustering)
+- **Fast to compute**: O(1) with low constant factors for frequent operations
+- **Low collision rate**: different inputs rarely map to the same index
+- **Stable under typical inputs**: resistant to common input patterns (e.g., similar prefixes)
+
+Notes and examples:
+- Cryptographic hashes (e.g., **SHA-256**) provide excellent distribution but are usually too slow for in-memory hash tables
+- Non-cryptographic hashes (e.g., **MurmurHash3**, **FNV-1a**) are commonly used in hash tables due to speed and good distribution
+- When mapping hash → index, prefer table sizes that reduce patterns (power-of-two sizes with bit-masking or primes with modulo)
+- Bad hash functions cause many collisions, turning O(1) average into O(n) worst-case behavior
+
 #### Basic Hash Table with Chaining
 
 **📁 Java Implementation:**
@@ -289,6 +302,21 @@ class HashTableOpenAddressing:
 Load Factor = Number of elements / Table size
 Optimal: 0.5 to 0.75
 ```
+
+##### Practical Notes on Load Factor and Resizing
+- When the load factor grows beyond the optimal range (e.g., > 0.75), collisions rise and performance degrades toward O(n)
+- A load factor strictly greater than 1 means there are more elements than buckets; the table must be resized (rehash) to restore O(1) average time
+- Resizing strategy (typical):
+  - Allocate a new array (usually 2× the current size or next prime)
+  - Recompute the hash for every key and insert into the new buckets (rehashing)
+  - Temporary cost is O(n) during resize; amortized cost of operations remains O(1)
+- Trade-offs:
+  - Lower target load factor → fewer collisions but uses more memory
+  - Higher target load factor → better memory use but more collisions
+- Common practice:
+  - Trigger resize when load factor exceeds 0.75
+  - Use prime table sizes or power-of-two sizes with bit-masking (language-dependent)
+
 
 ### Real-World Applications
 
@@ -590,3 +618,30 @@ Cache Efficiency = (Cache Hits / Total Requests) × 100%
 - Caches content closer to users
 - Reduces latency
 - Uses geographic distribution
+
+## Exercises — Hash Functions and Distribution
+
+The following exercises evaluate which hash function yields a good distribution (few collisions) for a hash table of size 10. Candidate hash functions over strings:
+- a) Always return "1"
+- b) Use the string length as the index
+- c) Use the first character as the index (all strings starting with the same letter collide)
+- d) Map letters to primes (a=2, b=3, c=5, d=7, e=11, ...), the hash is the sum of letter primes modulo the table size
+
+General notes:
+- a) is always bad (everything collides)
+- b) is good only if lengths vary
+- c) is good only if first letters vary
+- d) generally provides the best spread for typical text
+
+### 5.5 Phone book (keys: names; values: phone numbers)
+Names: Esther, Ben, Bob, Dan.
+- a) Bad; b) Poor (lengths 6,3,3,3 → collisions); c) Medium (E,B,B,D → B collides); d) Good (distinct indices under mod 10)
+Answer: d)
+
+### 5.6 Battery sizes to power (keys: A, AA, AAA, AAAA)
+- a) Bad; c) Bad (all start with A); b) Good (1,2,3,4); d) Good (2,4,6,8)
+Answer: b) or d)
+
+### 5.7 Book titles to authors (titles: Maus, Fun Home, Watchmen)
+- a) Bad; b) Medium (lengths 4,8,8 → collisions); c) Good (M,F,W distinct first letters); d) Good (prime-sum mod tends to spread)
+Answer: c) or d)
