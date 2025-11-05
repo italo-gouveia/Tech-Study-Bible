@@ -80,3 +80,28 @@ Result: 3 classes scheduled (A, C, E)
 - **Coin Change Problem**: Greedy doesn't work for all coin systems
 - **Knapsack Problem**: Greedy by value/weight ratio isn't always optimal
 - **Traveling Salesman**: Greedy nearest neighbor isn't optimal
+
+## 📊 Complexity Analysis
+
+### Classroom Scheduling:
+- **Time**: O(n log n) for sorting + O(n) for selection = O(n log n)
+- **Space**: O(1) additional space (if sorting in-place)
+
+### General Greedy Pattern:
+- Often dominated by sorting step: O(n log n)
+- Selection step usually O(n)
+- Overall: O(n log n) typically
+
+## 🎯 Real-World Applications
+
+### Scheduling Problems:
+- **Classroom scheduling** (this example)
+- **Meeting room booking**
+- **CPU task scheduling**
+- **Resource allocation**
+
+### Optimization Problems:
+- **Minimum Spanning Tree** (Kruskal's, Prim's algorithms)
+- **Shortest Path** (Dijkstra's algorithm)
+- **Huffman Coding** (data compression)
+- **Fractional Knapsack**
