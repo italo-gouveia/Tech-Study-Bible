@@ -174,11 +174,195 @@ Best for 4 kg = Laptop (3 kg) + Best for remaining 1 kg
                = 3,500
 ```
 
-The entry “Best for remaining 1 kg” was already computed while processing smaller capacities.
+The entry "Best for remaining 1 kg" was already computed while processing smaller capacities.
 
 ---
 
-## 12. Summary
+## 12. Frequently Asked Questions About the Knapsack Problem
+
+You might still think of this solution as some kind of magic. This section addresses common questions.
+
+### 12.1 What Happens If You Add an Item?
+
+**Question:** Imagine there's a **fourth item** you can steal that you hadn't noticed before. Suppose it's an **iPhone**.
+
+| Item   | Value (R$) | Weight (kg) |
+|--------|------------|-------------|
+| iPhone | 2,000      | 1           |
+
+**Do you need to recalculate everything from scratch?**
+
+**Answer:** **No!** Remember: dynamic programming builds progressively. You only need to add **one new row** to the table.
+
+**Current table (before iPhone):**
+
+```
+             1 kg           2 kg           3 kg              4 kg
+Guitar   1500 (G)      1500 (G)      1500 (G)         1500 (G)
+Stereo   1500 (G)      1500 (G)      1500 (G)         3000 (Stereo)
+Laptop   1500 (G)      1500 (G)      2000 (Laptop)    3500 (Laptop + G)
+```
+
+This means that for a 4 kg knapsack, you can steal items worth **R$ 3,500**.
+
+**Now, let's add a row for the iPhone:**
+
+```
+             1 kg           2 kg           3 kg              4 kg
+Guitar   1500 (G)      1500 (G)      1500 (G)         1500 (G)
+Stereo   1500 (G)      1500 (G)      1500 (G)         3000 (Stereo)
+Laptop   1500 (G)      1500 (G)      2000 (Laptop)    3500 (Laptop + G)
+iPhone   [to fill]     [to fill]     [to fill]        [to fill]
+```
+
+**Try filling this new row before continuing!**
+
+#### **Cell 1 (Capacity 1 kg)**
+
+The iPhone can be taken with a 1 kg knapsack.
+
+- Previous maximum: **R$ 1,500** (Guitar)
+- iPhone value: **R$ 2,000**
+
+Since 2,000 > 1,500, we take the **iPhone**.
+
+```
+             1 kg           2 kg           3 kg              4 kg
+Guitar   1500 (G)      1500 (G)      1500 (G)         1500 (G)
+Stereo   1500 (G)      1500 (G)      1500 (G)         3000 (Stereo)
+Laptop   1500 (G)      1500 (G)      2000 (Laptop)    3500 (Laptop + G)
+iPhone   2000 (I)      [to fill]     [to fill]        [to fill]
+```
+
+#### **Cell 2 (Capacity 2 kg)**
+
+In the next cell, we can take the iPhone and the guitar.
+
+- Previous maximum: **R$ 1,500** (Guitar)
+- iPhone (2,000) + Best for remaining 1 kg: 2,000 + 1,500 = **R$ 3,500**
+
+Since 3,500 > 1,500, we take **iPhone + Guitar**.
+
+```
+             1 kg           2 kg           3 kg              4 kg
+Guitar   1500 (G)      1500 (G)      1500 (G)         1500 (G)
+Stereo   1500 (G)      1500 (G)      1500 (G)         3000 (Stereo)
+Laptop   1500 (G)      1500 (G)      2000 (Laptop)    3500 (Laptop + G)
+iPhone   2000 (I)      3500 (I+G)    [to fill]        [to fill]
+```
+
+#### **Cell 3 (Capacity 3 kg)**
+
+For cell 3, there's no better option than taking the iPhone and the guitar again.
+
+- Previous maximum: **R$ 2,000** (Laptop)
+- iPhone (2,000) + Best for remaining 2 kg: 2,000 + 1,500 = **R$ 3,500**
+
+Since 3,500 > 2,000, we keep **iPhone + Guitar**.
+
+```
+             1 kg           2 kg           3 kg              4 kg
+Guitar   1500 (G)      1500 (G)      1500 (G)         1500 (G)
+Stereo   1500 (G)      1500 (G)      1500 (G)         3000 (Stereo)
+Laptop   1500 (G)      1500 (G)      2000 (Laptop)    3500 (Laptop + G)
+iPhone   2000 (I)      3500 (I+G)    3500 (I+G)       [to fill]
+```
+
+#### **Cell 4 (Capacity 4 kg)**
+
+In the last cell, things get interesting!
+
+- Previous maximum: **R$ 3,500** (Laptop + Guitar)
+- iPhone (2,000) + Best for remaining 3 kg: 2,000 + 2,000 = **R$ 4,000**
+
+Wait! Where did the 2,000 for 3 kg come from? Look at the **Laptop row, column 3** — it shows **R$ 2,000** (the laptop alone).
+
+So: iPhone (2,000) + Laptop (2,000) = **R$ 4,000**!
+
+Since 4,000 > 3,500, we have a **new maximum: iPhone + Laptop**!
+
+```
+             1 kg           2 kg           3 kg              4 kg
+Guitar   1500 (G)      1500 (G)      1500 (G)         1500 (G)
+Stereo   1500 (G)      1500 (G)      1500 (G)         3000 (Stereo)
+Laptop   1500 (G)      1500 (G)      2000 (Laptop)    3500 (Laptop + G)
+iPhone   2000 (I)      3500 (I+G)    3500 (I+G)       4000 (I+Laptop)
+```
+
+**Final answer:** With the iPhone available, the maximum value for a 4 kg knapsack is **R$ 4,000 (iPhone + Laptop)**.
+
+### 12.2 Can Column Values Decrease?
+
+**Question:** Is it possible for a column value to **decrease** as we add more rows?
+
+**Answer:** **No!** At each iteration, you store the **current maximum estimate**. The estimate can **never go below** what it already is!
+
+**Why?** The recurrence formula always takes the `max()` of:
+1. The previous best (which can't decrease)
+2. A new option (which might be better, but never worse)
+
+So values can only **stay the same** or **increase** — they never decrease.
+
+---
+
+## 13. Exercises
+
+### Exercise 9.1: MP3 Player
+
+Imagine you can steal another item: an **MP3 player**.
+
+| Item       | Value (R$) | Weight (kg) |
+|------------|------------|-------------|
+| MP3 Player | 1,000      | 1           |
+
+**Question:** Should you steal it?
+
+**Hint:** Add a new row to the table (after iPhone) and fill it using the same recurrence formula. Compare the new maximum value with the previous one.
+
+**Answer:** 
+
+Let's fill the MP3 Player row step by step:
+
+**Cell 1 (Capacity 1 kg):**
+- Previous maximum: **R$ 2,000** (iPhone)
+- MP3 Player value: **R$ 1,000**
+
+Since 2,000 > 1,000, we keep the **iPhone (2,000)**.
+
+**Cell 2 (Capacity 2 kg):**
+- Previous maximum: **R$ 3,500** (iPhone + Guitar)
+- MP3 (1,000) + Best for remaining 1 kg: 1,000 + 2,000 = **R$ 3,000**
+
+Since 3,500 > 3,000, we keep **iPhone + Guitar (3,500)**.
+
+**Cell 3 (Capacity 3 kg):**
+- Previous maximum: **R$ 3,500** (iPhone + Guitar)
+- MP3 (1,000) + Best for remaining 2 kg: 1,000 + 3,500 = **R$ 4,500**
+
+Since 4,500 > 3,500, we **update to MP3 + iPhone + Guitar (4,500)**!
+
+**Cell 4 (Capacity 4 kg):**
+- Previous maximum: **R$ 4,000** (iPhone + Laptop)
+- MP3 (1,000) + Best for remaining 3 kg: 1,000 + 3,500 = **R$ 4,500**
+
+Since 4,500 > 4,000, we **update to MP3 + iPhone + Guitar (4,500)**!
+
+**Final table with MP3 Player:**
+
+```
+             1 kg           2 kg           3 kg              4 kg
+Guitar   1500 (G)      1500 (G)      1500 (G)         1500 (G)
+Stereo   1500 (G)      1500 (G)      1500 (G)         3000 (Stereo)
+Laptop   1500 (G)      1500 (G)      2000 (Laptop)    3500 (Laptop + G)
+iPhone   2000 (I)      3500 (I+G)    3500 (I+G)       4000 (I+Laptop)
+MP3      2000 (I)      3500 (I+G)    4500 (MP3+I+G)   4500 (MP3+I+G)
+```
+
+**Conclusion:** Yes! The MP3 player improves the solution. The new maximum for 4 kg is **R$ 4,500 (MP3 + iPhone + Guitar)**.
+
+---
+
+## 14. Summary
 
 - **Brute force** tries every subset: `O(2^n)` operations → impractical.
 - **Greedy** is fast but approximate.
