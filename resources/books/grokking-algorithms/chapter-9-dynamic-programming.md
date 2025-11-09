@@ -362,7 +362,139 @@ MP3      2000 (I)      3500 (I+G)    4500 (MP3+I+G)   4500 (MP3+I+G)
 
 ---
 
-## 14. Summary
+## 14. More FAQs: Row Order, Fill Direction, and Fractional Weights
+
+### 14.1 What Happens If You Change the Row Order?
+
+**Question:** Will the answer change if you process items in a different order?
+
+**Answer:** **No!** The order of rows does **not** affect the final answer.
+
+**Example:** Let's fill the table in this order: **Stereo, Laptop, Guitar** (instead of Guitar, Stereo, Laptop).
+
+**Try filling it yourself before continuing!**
+
+**Table with order: Stereo, Laptop, Guitar**
+
+**Row 1 — Stereo (value 3,000; weight 4 kg):**
+- Capacities 1–3 kg: Stereo doesn't fit → **0** (or we could leave empty)
+- Capacity 4 kg: Stereo fits → **3,000 (Stereo)**
+
+```
+             1 kg           2 kg           3 kg              4 kg
+Stereo        0             0             0             3000 (Stereo)
+```
+
+**Row 2 — Laptop (value 2,000; weight 3 kg):**
+- Capacity 1 kg: Laptop doesn't fit → keep 0
+- Capacity 2 kg: Laptop doesn't fit → keep 0
+- Capacity 3 kg: Laptop fits → **2,000 (Laptop)**
+- Capacity 4 kg: Compare Stereo (3,000) vs Laptop (2,000) → keep **3,000 (Stereo)**
+
+```
+             1 kg           2 kg           3 kg              4 kg
+Stereo        0             0             0             3000 (Stereo)
+Laptop        0             0          2000 (Laptop)    3000 (Stereo)
+```
+
+**Row 3 — Guitar (value 1,500; weight 1 kg):**
+- Capacity 1 kg: Guitar fits → **1,500 (Guitar)**
+- Capacity 2 kg: Guitar (1,500) vs previous (0) → **1,500 (Guitar)**
+- Capacity 3 kg: Compare Laptop (2,000) vs Guitar (1,500) → keep **2,000 (Laptop)**
+- Capacity 4 kg: Compare Stereo (3,000) vs Laptop+Guitar (2,000+1,500=3,500) → **3,500 (Laptop + Guitar)**
+
+```
+             1 kg           2 kg           3 kg              4 kg
+Stereo        0             0             0             3000 (Stereo)
+Laptop        0             0          2000 (Laptop)    3000 (Stereo)
+Guitar     1500 (G)      1500 (G)      2000 (Laptop)    3500 (Laptop + G)
+```
+
+**Result:** The final answer is **still R$ 3,500 (Laptop + Guitar)**! ✅
+
+**Why doesn't order matter?**
+
+The recurrence formula considers **all possible combinations** regardless of processing order. Dynamic programming explores all subsets implicitly, so the order in which we add items doesn't change which combinations are possible.
+
+**Important note:** While the **final answer** doesn't change, the **intermediate values** in the table will be different. But the optimal value for capacity 4 kg will always be the same, regardless of the order you process items.
+
+### 14.2 Can You Fill the Table Column by Column?
+
+**Question:** Is it possible to fill the table starting from columns instead of rows?
+
+**Answer:** **Yes, you can!** For this problem, it doesn't make a difference. However, for other problems, the order might matter.
+
+**Column-by-column approach:**
+
+Instead of processing items row by row, you could process capacities column by column:
+
+1. Fill all rows for capacity 1 kg
+2. Then fill all rows for capacity 2 kg
+3. Then fill all rows for capacity 3 kg
+4. Finally, fill all rows for capacity 4 kg
+
+**Why this works:**
+
+The recurrence formula only depends on:
+- Previous items (rows above) — available when filling by rows
+- Smaller capacities (columns to the left) — available when filling by columns
+
+Since we're filling from top-left to bottom-right in both cases, the dependencies are satisfied either way.
+
+**When might order matter?**
+
+For some DP problems, especially those with complex dependencies or 2D/3D grids, the fill order can be critical. But for the standard 0/1 Knapsack, both approaches work.
+
+### 14.3 What Happens If You Add a Smaller Item?
+
+**Question:** What if you can steal a **necklace** that weighs **0.5 kg** and is worth **R$ 1,000**?
+
+**The Problem:**
+
+Until now, your table assumed only **integer weights** (1 kg, 2 kg, 3 kg, 4 kg).
+
+However, with the necklace (0.5 kg), if you take it, you'll have **3.5 kg** of space remaining.
+
+**What's the maximum value for a 3.5 kg knapsack?**
+
+You don't know! You only calculated for knapsacks of **1, 2, 3, and 4 kg** (integer weights).
+
+**The Solution: Refine Your Table**
+
+You need to **refine your table** to include fractional capacities. The table will be modified to include:
+
+**New table structure with fractional weights:**
+
+```
+        0.5 kg   1 kg   1.5 kg   2 kg   2.5 kg   3 kg   3.5 kg   4 kg
+Guitar
+Stereo
+Laptop
+Necklace
+```
+
+**Why this is necessary:**
+
+When you take the necklace (0.5 kg), you have 3.5 kg remaining. To know what to put in that 3.5 kg, you need to have already calculated the best value for a 3.5 kg knapsack.
+
+**Practical implications:**
+
+- **More columns** = more calculations
+- **Smaller increments** (e.g., 0.1 kg steps) = even more calculations
+- The problem becomes more complex, but the **same DP approach** still works
+
+**Example calculation with necklace:**
+
+For capacity 4 kg with all items including necklace:
+
+- Previous best (without necklace): **R$ 3,500** (Laptop + Guitar)
+- Necklace (1,000) + Best for 3.5 kg: 1,000 + (need to calculate 3.5 kg first)
+
+**Key insight:** With fractional weights, you need to **define a granularity** (e.g., 0.5 kg, 0.1 kg, etc.) and create columns for each possible capacity at that granularity. This increases the table size but the algorithm remains the same.
+
+---
+
+## 15. Summary
 
 - **Brute force** tries every subset: `O(2^n)` operations → impractical.
 - **Greedy** is fast but approximate.
