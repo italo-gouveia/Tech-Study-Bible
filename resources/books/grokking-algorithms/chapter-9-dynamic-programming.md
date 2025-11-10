@@ -496,9 +496,88 @@ For capacity 4 kg with all items including necklace:
 
 ## 15. Summary
 
+### 15.1 Fractional Items vs 0/1 (Greedy vs DP)
+
+**Question:** Can you steal fractions of an item?
+
+**Answer:** With classic 0/1 knapsack (this chapter), the answer is **no** — it’s all-or-nothing. DP here assumes full items only.
+
+But if you can take fractions (like opening a package and taking part of it), then you should use a **greedy algorithm**:
+- Always take as much as possible of the item with the **highest value per kg**
+- Then move to the next-best density, and so on
+
+Example:
+
+| Item   | Value per kg |
+|--------|---------------|
+| Quinoa | R$60/kg       |
+| Dal    | R$35/kg       |
+| Rice   | R$25/kg       |
+
+Greedy rule: fill with Quinoa first; if capacity remains, take Dal; then Rice.
+
+Result: “Backpack full of quinoa” is optimal under the fractional assumption.
+
 - **Brute force** tries every subset: `O(2^n)` operations → impractical.
 - **Greedy** is fast but approximate.
 - **Dynamic programming** builds the answer from smaller subproblems, reusing work and guaranteeing the optimum.
 - The final solution for a 4 kg knapsack is **Laptop + Guitar = R$ 3,500**.
 
 Dynamic programming lets us compute the exact optimum efficiently by storing and reusing the results of sub-knapsacks.
+
+---
+
+## 16. Travel Itinerary (Knapsack with Time as Capacity)
+
+You’re visiting London for two days. You can’t see everything, so you must pick a subset that maximizes your “score” (ranking), subject to a time budget. This is exactly the knapsack problem:
+
+- Capacity = total time (2 days)
+- Items = attractions (each with a time cost and a ranking value)
+
+Attractions:
+
+| Attraction               | Time | Score |
+|--------------------------|------|-------|
+| Westminster Abbey        | 0.5d | 7     |
+| The Globe Theatre        | 0.5d | 6     |
+| National Gallery         | 1.0d | 9     |
+| British Museum           | 2.0d | 9     |
+| St Paul’s Cathedral      | 0.5d | 8     |
+
+We’ll use DP with 0.5-day granularity. Columns represent time: 0.5, 1.0, 1.5, 2.0 days.
+
+Initial DP table (to fill):
+
+```
+Time (days) →     0.5     1.0     1.5     2.0
+Westminster
+The Globe
+National Gallery
+British Museum
+St Paul’s
+```
+
+Filled DP table and choices (letters indicate included items):
+- W = Westminster, T = Globe (Theatre), G = National Gallery, B = British Museum, S = St Paul’s
+
+```
+Time (days) →        0.5        1.0         1.5          2.0
+Westminster         7W         7W          7W           7W
+The Globe           7W        13WT        13WT         13WT
+National Gallery    7W        16G         16G          22WTG
+British Museum      7W        13WT        16WG         22WTG
+St Paul’s           8S        15WS        21WT         24WGS
+```
+
+Explanation (high level):
+- 0.5d: best single 0.5d item is St Paul’s (8) vs Westminster (7) → last row shows 8S
+- 1.0d: top combos of two 0.5d items (W+T or W+S or T+S) vs National Gallery (9) → best is 15WS
+- 1.5d: best among (any 1.0d combo + 0.5d item) vs (National Gallery 1.0d + best 0.5d) → 21WT
+- 2.0d: best among (National Gallery 1.0d + two 0.5d items) → 24WGS
+
+Final answer (2 days): pick
+- Westminster Abbey (0.5d, 7)
+- National Gallery (1.0d, 9)
+- St Paul’s Cathedral (0.5d, 8)
+
+Total time = 2.0 days, Total score = 7 + 9 + 8 = 24 (W + G + S)
