@@ -581,3 +581,150 @@ Final answer (2 days): pick
 - St Paul’s Cathedral (0.5d, 8)
 
 Total time = 2.0 days, Total score = 7 + 9 + 8 = 24 (W + G + S)
+
+---
+
+## 17. Handling Item Interdependence (When DP Breaks)
+
+Sometimes items are not independent. Consider a trip to Paris:
+
+| Attraction   | Time | Score |
+|--------------|------|-------|
+| Eiffel       | 1.5d | 8     |
+| Louvre       | 1.5d | 9     |
+| Notre Dame   | 1.5d | 7     |
+
+Travel from London to Paris costs 0.5 day, but you only pay this once. After arriving, visiting all three takes 3.5 days total, not 4.5 days. That means the effective time cost of the second/third items is reduced once you’ve paid the initial overhead. Items are interdependent.
+
+DP requires subproblems to be discrete and independent. With interdependence (shared overheads, conditional discounts), the standard knapsack DP formulation doesn’t apply directly. You’d need a different model (e.g., state augmentation to encode “has_arrived_in_Paris” as part of the state, or a graph shortest-path formulation over states).
+
+Takeaway: Classic 0/1 knapsack DP assumes item independence. If items interact (shared setup costs), you must redefine state to capture those dependencies or use another approach.
+
+---
+
+## 18. Do We Only Combine Two “Sub-knapsacks”?
+
+It may look like the recurrence only combines “two sub-knapsacks” at a time, but that’s just how the recurrence is written:
+
+```
+dp[i][j] = max(
+  dp[i-1][j],                      # skip item i
+  value[i] + dp[i-1][j - w[i]]     # take item i
+)
+```
+
+The term `dp[i-1][j - w[i]]` itself already encodes combinations of many prior items. So while each step considers two options, the subproblem `dp[i-1][j - w[i]]` may already be the optimal combination of multiple items. In other words, DP can (and does) choose arbitrarily many items — it just builds that choice incrementally via subproblems.
+
+---
+
+## 19. Best Solution May Not Use Full Capacity
+
+Sometimes the optimal solution leaves unused capacity. Suppose you can also steal a large diamond:
+
+- Diamond — value R$ 1,000,000 — weight 3.5 kg
+
+Clearly you take the diamond. You still have 0.5 kg of capacity, but maybe nothing weighs ≤ 0.5 kg. The optimal value doesn’t require filling capacity exactly — it’s okay (and common) to end with slack.
+
+---
+
+## 20. Exercise 9.2 — Camping Knapsack (Capacity 6 kg)
+
+Items:
+
+| Item  | Weight | Value |
+|-------|--------|-------|
+| Water | 3      | 10    |
+| Book  | 1      | 3     |
+| Food  | 2      | 9     |
+| Jacket| 2      | 5     |
+| Camera| 1      | 6     |
+
+Goal: maximize value with capacity 6.
+
+Hint: Use the same 0/1 knapsack DP (integer weights). A typical optimal selection is:
+- Water (3,10) + Food (2,9) + Camera (1,6) → weight 6, value 25
+This beats alternatives like Book+Food+Jacket+Camera (1+2+2+1=6, value 3+9+5+6=23).
+
+---
+
+## 21. Longest Common Substring (LCSubstr)
+
+Use-case: spell-checking, DNA similarity, typo correction — find the longest substring shared by two strings (contiguous characters).
+
+Example: find the longest common substring between “hish” and “fish”.
+
+DP table compares prefixes; cells store the length of the longest common substring ending at those positions. If letters match: cell = diag (i-1,j-1) + 1; else 0.
+
+Axes: rows = chars of word A; columns = chars of word B.
+
+Let rows be F I S H and columns be H I S H (for “fish” vs “hish”):
+
+```
+      H  I  S  H
+F     0  0  0  0
+I     0  1  0  0
+S     0  0  2  0
+H     1  0  0  3
+```
+
+Rules:
+- Match → take upper-left + 1
+- No match → 0
+
+Pseudo:
+```
+if a[i] == b[j]:
+  dp[i][j] = dp[i-1][j-1] + 1
+else:
+  dp[i][j] = 0
+```
+
+The answer is the maximum value anywhere in the table (not necessarily the last cell).
+
+Apply to “hish” vs “vista” similarly.
+
+---
+
+## 22. Longest Common Subsequence (LCS)
+
+Different from substring: subsequence is not required to be contiguous. Classic recurrence:
+
+```
+if a[i] == b[j]:
+  dp[i][j] = dp[i-1][j-1] + 1
+else:
+  dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+```
+
+Example: decide if “fosh” is closer to “fish” or “fort”.
+- LCS(fosh, fish) = 3 (e.g., f–s–h)
+- LCS(fosh, fort) = 2
+So “fosh” is closer to “fish”.
+
+---
+
+## 23. Real Applications
+
+- Bioinformatics: compare DNA/protein sequences (similarity, alignment).
+- Spell-checkers and fuzzy matching.
+- Edit distance (Levenshtein).
+- Version control (e.g., git diff).
+
+---
+
+## 24. Exercise 9.3
+
+Draw and fill a DP table to compute the longest common substring between “blue” and “clues”. Remember:
+- Substring → contiguous, use the LCSubstr rule (diag+1, else 0)
+- Answer is the max cell value anywhere in the table
+
+---
+
+## 25. Recap
+
+- DP is great when you want to optimize under a constraint.
+- Works when the problem decomposes into **independent** subproblems.
+- Solutions use **tables** that store optimal subproblem results.
+- Cell values represent what you want to optimize (value, length, etc.).
+- Each cell is a subproblem — decide how it relates to smaller ones.
+- There is no one-size-fits-all formula — you shape the DP to the problem.
