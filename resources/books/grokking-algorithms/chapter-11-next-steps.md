@@ -350,27 +350,207 @@ adit.io → YES
 
 Great! But the hash would need to be **way too large**.
 
-### 7.3 Solutions
+### 7.3 Bloom Filters
 
-This is where these come in:
+Bloom Filters offer a solution. They are **probabilistic data structures** that provide an answer that **may be wrong**, but will **probably be correct**.
 
-- ✓ **Bloom Filter**
-- ✓ **HyperLogLog**
+Instead of asking a hash table, you can ask a Bloom filter if a URL has been crawled before. A hash table would give an **exact result**, but a Bloom filter will give a result that is **probably correct**.
 
-Both solve membership problems using **much less memory**.
+**Key properties:**
+
+- **False positives are possible.**  
+  Google might say "You've already crawled this site" even if it's not true.
+
+- **False negatives are NOT possible.**  
+  If the Bloom filter says "You haven't crawled this site yet", then you **definitely** haven't crawled it.
+
+Bloom Filters are great because they use **very little space**.
+
+- A full hash table for each URL crawled by Google would be enormous.
+- A Bloom filter uses **much less space** — but with less precision.
+
+Bitly can use a Bloom filter to know if a link has been shortened without needing to store everything.
+
+### 7.4 HyperLogLog
+
+In the same style, there's another algorithm called **HyperLogLog**.
+
+Imagine Google wants to count the number of **unique searches** performed by users.
+
+Answering this exactly would require **a lot of space** (storing all distinct searches).
+
+HyperLogLog **approximates** the number of unique elements in a set using only a **fraction of the memory**.
+
+It:
+- **doesn't provide an exact answer**, but
+- **provides an excellent approximation**, using
+- **very little space**.
+
+If you have lots of data and can accept an approximate answer, HyperLogLog is ideal.
 
 ---
 
-## 8. Summary
+## 8. SHA Algorithms
 
-This chapter introduced several important concepts:
+Do you remember the hashing technique from Chapter 5?
+
+Suppose you have a key and want to place an associated value in an array, using a hash function.
+
+```
+Array: [0] [1] [2] ... [25]
+```
+
+You use the hash function to find the slot where the value should be inserted, and place the value there.
+
+```
+"plums" → hash function → [slot 7]
+```
+
+This allows searching the array in **constant time (O(1))**.
+
+**SHA**, however, is a type of **secure hash**, used to generate a **unique string** for any input.
+
+### 8.1 Comparing Files
+
+If you generate a SHA hash for a file and someone else generates a SHA hash for a different file, you can compare them without seeing the content:
+
+```
+"hello"     → 2cf24db...
+"algorithm" → b1eb2ec...
+"password"  → 5e88489...
+```
+
+SHA strings are longer; these are abbreviated.
+
+### 8.2 Checking Passwords
+
+When Gmail stores your password, it doesn't store the password itself, but the **SHA hash** of the password.
+
+When you type your password:
+1. The system calculates the hash
+2. Compares it with the stored hash
+3. If they're equal, the password is correct
+
+**Example:**
+
+```
+"abc123" → "6ca13d..."
+```
+
+But the **reverse process is not possible**:  
+Given "6ca13d", there's no way to discover what the original password was.
+
+**This is why SHA is secure.**
+
+### 8.3 Locally Sensitive Hash
+
+SHA has a characteristic: it is **locally insensitive**.
+
+If you change just one character:
+
+```
+"hand" → cd6357...
+"head" → e392da...
+```
+
+They're **completely different**.
+
+This is good for passwords, but bad when we want to measure **similarity** between strings.
+
+For this, there's **Simhash**, which generates **similar hashes** for similar inputs.
+
+**Uses of Simhash:**
+
+- Google uses it to detect duplicate content on the web.
+- Teachers can check for plagiarism.
+- Scribd uses it to block uploads of protected books.
+
+Simhash is useful when you want to verify **similarity**.
+
+---
+
+## 9. Diffie-Hellman Key Exchange
+
+The Diffie-Hellman key exchange solves an old problem:
+
+**How can two people agree on a secret without sending it directly?**
+
+### 9.1 Example of Simple Cipher (Illustrative Only)
+
+**Message:** 9, 6, 13, 13, 16  24, 16, 19, 13, 5
+
+- Trying to decipher with a=1, b=2 → "ifmmp xpsme" (doesn't make sense)
+- Trying with a=2, b=3 → "hello world" (it worked!)
+
+Simple ciphers can be broken easily.
+
+### 9.2 How Diffie-Hellman Solves It
+
+Diffie-Hellman solves two problems:
+
+1. The parties **don't need to agree on the cipher beforehand**.
+2. The encrypted messages are **extremely difficult to decode**.
+
+The exchange creates two keys:
+
+- **Public key** (can be shared)
+- **Private key** (kept secret)
+
+A message encrypted with a public key can only be read by the corresponding private key.
+
+---
+
+## 10. Linear Programming
+
+Linear programming is used to **maximize something** with **limited resources**.
+
+### 10.1 Example 1 — T-Shirt and Bag Factory
+
+**T-shirts:** 1 meter of fabric + 2 buttons → profit R$ 2  
+**Bags:** 2 meters + 2 buttons → profit R$ 3
+
+**Resources:** 11 meters of fabric, 20 buttons
+
+**Question:** How many t-shirts and bags will maximize profit?
+
+### 10.2 Example 2 — Political Marketing
+
+- Want to maximize votes in SF and Chicago
+- Each vote costs a certain amount
+- Limited time (50 days)
+- Budget: R$ 1,500
+
+**Question:** What is the maximum number of votes?
+
+Linear programming solves this type of optimization using the **Simplex algorithm**.
+
+---
+
+## 11. Epilogue
+
+The author concludes by explaining that:
+
+- This book showed only the **beginning**.
+- The best way to learn is to find something that sparks your interest and **dive deep**.
+- The 10 algorithms presented give a **solid foundation** to move forward.
+
+---
+
+## 12. Summary
+
+This chapter introduced ten important algorithms and concepts not covered in detail earlier:
 
 1. **Binary Search Trees:** Faster insertions/deletions than arrays, but require balancing.
 2. **Inverted Indexes:** Core data structure for search engines.
 3. **Fourier Transform:** Powerful tool for signal processing, compression, and analysis.
 4. **Parallel Algorithms:** Running algorithms across multiple cores, with challenges in management and load balancing.
 5. **MapReduce:** Distributed algorithm combining map and reduce functions for processing massive datasets.
-6. **Bloom Filters and HyperLogLog:** Memory-efficient solutions for membership testing in huge sets.
+6. **Bloom Filters:** Probabilistic data structures for membership testing with minimal memory (false positives possible, false negatives not).
+7. **HyperLogLog:** Approximate counting of unique elements using very little space.
+8. **SHA Algorithms:** Secure hashing for file comparison and password storage (one-way, locally insensitive).
+9. **Simhash:** Locally sensitive hashing for detecting similarity and duplicate content.
+10. **Diffie-Hellman Key Exchange:** Cryptographic protocol for secure key exchange without pre-sharing secrets.
+11. **Linear Programming:** Optimization technique for maximizing outcomes with limited resources (Simplex algorithm).
 
-These are just a few of the many algorithms and data structures worth exploring as you continue your learning journey.
+These algorithms and data structures represent just the beginning of what's possible. The best way to learn is to find something that sparks your interest and dive deep. The foundation provided in this book gives you a solid base to explore further.
 
