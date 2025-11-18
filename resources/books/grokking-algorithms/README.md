@@ -2,6 +2,8 @@
 
 A practical guide to algorithms and data structures with clear explanations and visual examples.
 
+**Status**: ✅ **COMPLETED**
+
 ## Table of Contents
 
 ### Chapter 4: Quicksort
@@ -15,6 +17,30 @@ A practical guide to algorithms and data structures with clear explanations and 
 - **Topics**: Hash tables, hash functions, collision resolution
 - **Exercises**: Hash function consistency analysis
 - **Key Concepts**: Hash function properties, chaining, open addressing
+
+### Chapter 6: Breadth-First Search
+- **File**: `chapter-6-breadth-first-search.md`
+- **Topics**: Graph algorithms, BFS, shortest path problems
+
+### Chapter 7: Dijkstra's Algorithm
+- **File**: `chapter-7-dijkstra.md`
+- **Topics**: Weighted graphs, shortest path algorithm, greedy approach
+
+### Chapter 8: Greedy Algorithms
+- **File**: `chapter-8-greedy-algorithms.md`
+- **Topics**: Greedy strategy, optimization problems, approximation algorithms
+
+### Chapter 9: Dynamic Programming
+- **File**: `chapter-9-dynamic-programming.md`
+- **Topics**: Memoization, overlapping subproblems, optimal substructure
+
+### Chapter 10: K-Nearest Neighbors
+- **File**: `chapter-10-k-nearest-neighbors.md`
+- **Topics**: Machine learning basics, classification, regression
+
+### Chapter 11: Where to Go Next
+- **File**: `chapter-11-next-steps.md`
+- **Topics**: Further learning resources, advanced topics, practice recommendations
 
 ## Book Structure
 
@@ -47,18 +73,18 @@ This book covers fundamental algorithms and data structures with a focus on:
 6. Hash function consistency is essential for reliable hash table behavior
 7. Collision resolution strategies balance performance and memory usage
 
-## Future Chapters to Add
+## Completed Chapters
 
-- Chapter 1: Introduction to Algorithms
-- Chapter 2: Selection Sort
-- Chapter 3: Recursion
-- ~~Chapter 5: Hash Tables~~ ✅ **COMPLETED**
-- Chapter 6: Breadth-First Search
-- Chapter 7: Dijkstra's Algorithm
-- Chapter 8: Greedy Algorithms
-- Chapter 9: Dynamic Programming
-- Chapter 10: K-Nearest Neighbors
-- Chapter 11: Where to Go Next
+- ✅ Chapter 4: Quicksort
+- ✅ Chapter 5: Hash Tables
+- ✅ Chapter 6: Breadth-First Search
+- ✅ Chapter 7: Dijkstra's Algorithm
+- ✅ Chapter 8: Greedy Algorithms
+- ✅ Chapter 9: Dynamic Programming
+- ✅ Chapter 10: K-Nearest Neighbors
+- ✅ Chapter 11: Where to Go Next
+
+**Note**: Chapters 1-3 (Introduction, Selection Sort, Recursion) were covered as foundational concepts throughout the study.
 
 ## Study Approach
 
