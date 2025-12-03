@@ -188,5 +188,3 @@ func main() {
 		fmt.Println()
 	}
 }
-
-
