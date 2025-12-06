@@ -123,5 +123,3 @@ func main() {
 		fmt.Println()
 	}
 }
-
-
