@@ -128,6 +128,140 @@ add(5):
   Heap: [5,5,8] → return 5 ✅
 ```
 
+## Step-by-Step Visual Example (k=5)
+
+Let's trace through a detailed example with **k=5** and initial numbers: `[10, 7, 4, 2, 1, 9, 6]`
+
+### Constructor Phase (Adding Initial Numbers)
+
+**Step 1: Create empty heap**
+```
+k = 5
+Heap: []
+```
+
+**Step 2: Add 10**
+```
+Heap: [10]
+Size: 1 ≤ 5 ✅ OK
+Top (smallest): 10
+```
+
+**Step 3: Add 7**
+```
+Heap: [7, 10]
+Size: 2 ≤ 5 ✅ OK
+Top (smallest): 7
+```
+
+**Step 4: Add 4**
+```
+Heap: [4, 7, 10]
+Size: 3 ≤ 5 ✅ OK
+Top (smallest): 4
+```
+
+**Step 5: Add 2**
+```
+Heap: [2, 4, 7, 10]
+Size: 4 ≤ 5 ✅ OK
+Top (smallest): 2
+```
+
+**Step 6: Add 1**
+```
+Heap: [1, 2, 4, 7, 10]
+Size: 5 = 5 ✅ OK (exactly k elements!)
+Top (smallest): 1
+```
+
+**Step 7: Add 9**
+```
+Heap: [1, 2, 4, 7, 9, 10] → Size 6 > 5! ❌
+  → Remove smallest (1): [2, 4, 7, 9, 10]
+Size: 5 ✅
+Top (smallest): 2
+```
+
+**Step 8: Add 6**
+```
+Heap: [2, 4, 6, 7, 9, 10] → Size 6 > 5! ❌
+  → Remove smallest (2): [4, 6, 7, 9, 10]
+Size: 5 ✅
+Top (smallest): 4
+```
+
+**Final state after constructor:**
+```
+Heap: [4, 6, 7, 9, 10]
+Top: 4 (this is the 5th largest!)
+```
+
+### Add Operations
+
+**add(3):**
+```
+Heap before: [4, 6, 7, 9, 10]
+Add 3: [3, 4, 6, 7, 9, 10] → Size 6 > 5! ❌
+  → Remove smallest (3): [4, 6, 7, 9, 10]
+Heap after: [4, 6, 7, 9, 10]
+Return: 4 ✅ (5th largest)
+```
+
+**add(8):**
+```
+Heap before: [4, 6, 7, 9, 10]
+Add 8: [4, 6, 7, 8, 9, 10] → Size 6 > 5! ❌
+  → Remove smallest (4): [6, 7, 8, 9, 10]
+Heap after: [6, 7, 8, 9, 10]
+Return: 6 ✅ (5th largest)
+```
+
+**add(12):**
+```
+Heap before: [6, 7, 8, 9, 10]
+Add 12: [6, 7, 8, 9, 10, 12] → Size 6 > 5! ❌
+  → Remove smallest (6): [7, 8, 9, 10, 12]
+Heap after: [7, 8, 9, 10, 12]
+Return: 7 ✅ (5th largest)
+```
+
+**add(5):**
+```
+Heap before: [7, 8, 9, 10, 12]
+Add 5: [5, 7, 8, 9, 10, 12] → Size 6 > 5! ❌
+  → Remove smallest (5): [7, 8, 9, 10, 12]
+Heap after: [7, 8, 9, 10, 12]
+Return: 7 ✅ (5th largest - didn't change because 5 < 7)
+```
+
+**add(11):**
+```
+Heap before: [7, 8, 9, 10, 12]
+Add 11: [7, 8, 9, 10, 11, 12] → Size 6 > 5! ❌
+  → Remove smallest (7): [8, 9, 10, 11, 12]
+Heap after: [8, 9, 10, 11, 12]
+Return: 8 ✅ (5th largest)
+```
+
+### Summary Table
+
+| Action | Heap Before | Add Value | Heap After | Top (5th Largest) |
+|--------|-------------|-----------|------------|-------------------|
+| Constructor | `[]` | `[10,7,4,2,1,9,6]` | `[4,6,7,9,10]` | 4 |
+| add(3) | `[4,6,7,9,10]` | 3 | `[4,6,7,9,10]` | 4 |
+| add(8) | `[4,6,7,9,10]` | 8 | `[6,7,8,9,10]` | 6 |
+| add(12) | `[6,7,8,9,10]` | 12 | `[7,8,9,10,12]` | 7 |
+| add(5) | `[7,8,9,10,12]` | 5 | `[7,8,9,10,12]` | 7 |
+| add(11) | `[7,8,9,10,12]` | 11 | `[8,9,10,11,12]` | 8 |
+
+### Key Observations
+
+1. **Heap always maintains exactly k largest elements** (after initial k elements are added)
+2. **The root (top) is always the kth largest** (smallest among the k largest)
+3. **When adding a value smaller than the root**, it gets removed immediately, so the answer doesn't change
+4. **When adding a value larger than the root**, the old root is removed and the new value stays, updating the kth largest
+
 ### When to Use Each
 
 **Use Min-Heap when:**
